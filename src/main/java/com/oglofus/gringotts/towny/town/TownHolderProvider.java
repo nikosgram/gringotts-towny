@@ -14,7 +14,6 @@ import org.gestern.gringotts.Gringotts;
 import org.gestern.gringotts.GringottsAccount;
 import org.gestern.gringotts.accountholder.AccountHolder;
 import org.gestern.gringotts.accountholder.AccountHolderProvider;
-import org.gestern.gringotts.event.VaultCreationEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,7 +39,7 @@ public class TownHolderProvider implements AccountHolderProvider, Listener {
             return getAccountHolder(targetUuid);
         } catch (IllegalArgumentException ignored) {}
 
-        String vaultPrefix = VaultCreationEvent.Type.TOWN.getId() + "-";
+        String vaultPrefix = TownAccountHolder.ACCOUNT_TYPE + "-";
 
         Town town;
 
@@ -98,8 +97,8 @@ public class TownHolderProvider implements AccountHolderProvider, Listener {
      * @return the type
      */
     @Override
-    public @NotNull VaultCreationEvent.Type getType() {
-        return VaultCreationEvent.Type.TOWN;
+    public @NotNull String getType() {
+        return TownAccountHolder.ACCOUNT_TYPE;
     }
 
     /**

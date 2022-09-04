@@ -3,14 +3,13 @@ package com.oglofus.gringotts.towny.nation;
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.object.Nation;
 import org.gestern.gringotts.accountholder.AccountHolder;
-import org.gestern.gringotts.event.VaultCreationEvent;
 
 /**
  * The type Nation account holder.
  */
 public class NationAccountHolder implements AccountHolder {
-    private final VaultCreationEvent.Type type = VaultCreationEvent.Type.NATION;
-    private final Nation                  nation;
+    public static final String ACCOUNT_TYPE = "nation";
+    private final       Nation nation;
 
     /**
      * Instantiates a new Nation account holder.
@@ -48,7 +47,7 @@ public class NationAccountHolder implements AccountHolder {
      */
     @Override
     public String getType() {
-        return this.type.getId();
+        return ACCOUNT_TYPE;
     }
 
     /**

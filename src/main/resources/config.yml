@@ -1,0 +1,7 @@
+# supported languages: "custom" (default, english), "de" (german), and "pt-BR" (brazilian portuguese).
+language: custom
+
+# changes the required sign name for the creation of town/nation vaults
+# Example: [town vault]
+town_sign_vault_name: 'town'
+nation_sign_vault_name: 'nation'

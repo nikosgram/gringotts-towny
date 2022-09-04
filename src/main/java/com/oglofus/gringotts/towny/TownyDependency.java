@@ -1,6 +1,8 @@
 package com.oglofus.gringotts.towny;
 
+import com.oglofus.gringotts.towny.nation.NationAccountHolder;
 import com.oglofus.gringotts.towny.nation.NationHolderProvider;
+import com.oglofus.gringotts.towny.town.TownAccountHolder;
 import com.oglofus.gringotts.towny.town.TownHolderProvider;
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.TownyUniverse;
@@ -10,12 +12,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.gestern.gringotts.Gringotts;
-import org.gestern.gringotts.Language;
 import org.gestern.gringotts.Permissions;
 import org.gestern.gringotts.accountholder.AccountHolder;
 import org.gestern.gringotts.api.dependency.Dependency;
 import org.gestern.gringotts.event.PlayerVaultCreationEvent;
-import org.gestern.gringotts.event.VaultCreationEvent;
 
 /**
  * The type Towny dependency.
@@ -80,9 +80,8 @@ public class TownyDependency implements Dependency, Listener {
         Bukkit.getPluginManager().registerEvents(this.townHolderProvider, this.gringotts);
         Bukkit.getPluginManager().registerEvents(this.nationHolderProvider, this.gringotts);
 
-        Gringotts.instance.registerAccountHolderProvider(VaultCreationEvent.Type.TOWN.getId(), this.townHolderProvider);
-        Gringotts.instance.registerAccountHolderProvider(VaultCreationEvent.Type.NATION.getId(),
-                this.nationHolderProvider);
+        Gringotts.instance.registerAccountHolderProvider(TownAccountHolder.ACCOUNT_TYPE, this.townHolderProvider);
+        Gringotts.instance.registerAccountHolderProvider(NationAccountHolder.ACCOUNT_TYPE, this.nationHolderProvider);
     }
 
     /**
@@ -109,60 +108,56 @@ public class TownyDependency implements Dependency, Listener {
 
         AccountHolder owner;
 
-        switch (event.getType()) {
-            case TOWN -> {
-                if (!Permissions.CREATE_VAULT_TOWN.isAllowed(player)) {
-                    player.sendMessage(Language.LANG.plugin_towny_noTownVaultPerm);
+        if (event.getType().equals(TownyConfiguration.CONF.townSignTypeName)) {
+            if (!TownyPermissions.CREATE_VAULT_TOWN.isAllowed(player)) {
+                player.sendMessage(TownyLanguage.LANG.noTownVaultPerm);
 
-                    return;
-                }
+                return;
+            }
 
-                if (forOther) {
-                    owner = this.townHolderProvider.getAccountHolder(TownyUniverse.getInstance().getTown(line2String));
-
-                    if (owner == null) {
-                        return;
-                    }
-                } else {
-                    owner = this.townHolderProvider.getAccountHolder(player);
-                }
+            if (forOther) {
+                owner = this.townHolderProvider.getAccountHolder(TownyUniverse.getInstance().getTown(line2String));
 
                 if (owner == null) {
-                    player.sendMessage(Language.LANG.plugin_towny_noTownResident);
-
                     return;
                 }
-
-                event.setOwner(owner);
-                event.setValid(true);
+            } else {
+                owner = this.townHolderProvider.getAccountHolder(player);
             }
-            case NATION -> {
-                if (!Permissions.CREATE_VAULT_NATION.isAllowed(player)) {
-                    player.sendMessage(Language.LANG.plugin_towny_noNationVaultPerm);
 
-                    return;
-                }
+            if (owner == null) {
+                player.sendMessage(TownyLanguage.LANG.noTownResident);
 
-                if (forOther) {
-                    owner = this.nationHolderProvider.getAccountHolder(
-                            TownyUniverse.getInstance().getNation(line2String));
+                return;
+            }
 
-                    if (owner == null) {
-                        return;
-                    }
-                } else {
-                    owner = this.nationHolderProvider.getAccountHolder(player);
-                }
+            event.setOwner(owner);
+            event.setValid(true);
+        } else if (event.getType().equals(TownyConfiguration.CONF.nationSignTypeName)) {
+            if (!TownyPermissions.CREATE_VAULT_NATION.isAllowed(player)) {
+                player.sendMessage(TownyLanguage.LANG.noNationVaultPerm);
+
+                return;
+            }
+
+            if (forOther) {
+                owner = this.nationHolderProvider.getAccountHolder(TownyUniverse.getInstance().getNation(line2String));
 
                 if (owner == null) {
-                    player.sendMessage(Language.LANG.plugin_towny_notInNation);
-
                     return;
                 }
-
-                event.setOwner(owner);
-                event.setValid(true);
+            } else {
+                owner = this.nationHolderProvider.getAccountHolder(player);
             }
+
+            if (owner == null) {
+                player.sendMessage(TownyLanguage.LANG.notInNation);
+
+                return;
+            }
+
+            event.setOwner(owner);
+            event.setValid(true);
         }
     }
 }

@@ -15,7 +15,6 @@ import org.gestern.gringotts.Gringotts;
 import org.gestern.gringotts.GringottsAccount;
 import org.gestern.gringotts.accountholder.AccountHolder;
 import org.gestern.gringotts.accountholder.AccountHolderProvider;
-import org.gestern.gringotts.event.VaultCreationEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +40,7 @@ public class NationHolderProvider implements AccountHolderProvider, Listener {
             return getAccountHolder(targetUuid);
         } catch (IllegalArgumentException ignored) {}
 
-        String vaultPrefix = VaultCreationEvent.Type.TOWN.getId() + "-";
+        String vaultPrefix = NationAccountHolder.ACCOUNT_TYPE + "-";
 
         Nation nation;
 
@@ -99,8 +98,8 @@ public class NationHolderProvider implements AccountHolderProvider, Listener {
      * @return the type
      */
     @Override
-    public @NotNull VaultCreationEvent.Type getType() {
-        return VaultCreationEvent.Type.NATION;
+    public @NotNull String getType() {
+        return NationAccountHolder.ACCOUNT_TYPE;
     }
 
     /**
@@ -138,13 +137,13 @@ public class NationHolderProvider implements AccountHolderProvider, Listener {
 
         AccountHolder holder = this.getAccountHolder(nation);
 
-        if (holder != null) {
+        if (holder == null) {
             return;
         }
 
         GringottsAccount account = Gringotts.instance.getAccounting().getAccount(holder);
 
-        if (account != null) {
+        if (account == null) {
             return;
         }
 
