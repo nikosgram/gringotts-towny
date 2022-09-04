@@ -1,0 +1,12 @@
+name: gringotts-towny
+authors: [ nikosgram ]
+website: https://github.com/nikosgram/gringotts-towny
+version: ${version}
+main: com.oglofus.gringotts.towny.GringottsTowny
+
+depend:
+  - Gringotts
+  - Towny
+
+loadbefore:
+  - Gringotts
