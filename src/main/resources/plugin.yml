@@ -4,8 +4,10 @@ website: https://github.com/nikosgram/gringotts-towny
 version: ${version}
 main: com.oglofus.gringotts.towny.GringottsTowny
 
+api-version: "1.19"
+
 awareness:
-  - '!@UTF-8'
+  - !@UTF-8
 
 depend:
   - Gringotts
@@ -13,3 +15,4 @@ depend:
 
 loadbefore:
   - Gringotts
+  - Towny

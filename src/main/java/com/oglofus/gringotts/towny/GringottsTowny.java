@@ -5,6 +5,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.gestern.gringotts.Gringotts;
+import org.gestern.gringotts.api.dependency.Dependency;
 
 import java.io.File;
 import java.io.InputStream;
@@ -37,6 +38,8 @@ import java.nio.charset.StandardCharsets;
         // load and init configuration
         saveDefaultConfig(); // saves default configuration if no config.yml exists yet
         reloadConfig();
+
+        Gringotts.instance.getDependencies().getDependency("towny").ifPresent(Dependency::onLoad);
     }
 
     @Override
