@@ -5,3 +5,6 @@ language: custom
 # Example: [town vault]
 town_sign_vault_name: 'town'
 nation_sign_vault_name: 'nation'
+
+# Prevents players from creating a vault outside a town if set to true
+vaults_only_in_towns: false

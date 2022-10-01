@@ -13,9 +13,12 @@ public enum TownyConfiguration {
     public String townSignTypeName   = "town";
     public String nationSignTypeName = "nation";
 
+    public boolean vaultsOnlyInTowns = false;
+
     public void readConfig(FileConfiguration savedConfig) {
         CONF.language           = savedConfig.getString("language", "custom");
         CONF.townSignTypeName   = savedConfig.getString("town_sign_type_name", "town");
         CONF.nationSignTypeName = savedConfig.getString("nation_sign_type_name", "nation");
+        CONF.vaultsOnlyInTowns  = savedConfig.getBoolean("vaults_only_in_towns", false);
     }
 }

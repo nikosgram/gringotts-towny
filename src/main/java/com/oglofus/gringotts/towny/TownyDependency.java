@@ -1,11 +1,7 @@
 package com.oglofus.gringotts.towny;
 
-import com.oglofus.gringotts.towny.nation.NationAccountHolder;
-import com.oglofus.gringotts.towny.nation.NationHolderProvider;
-import com.oglofus.gringotts.towny.town.TownAccountHolder;
-import com.oglofus.gringotts.towny.town.TownHolderProvider;
-import com.palmergames.bukkit.towny.Towny;
-import com.palmergames.bukkit.towny.TownyUniverse;
+import static com.oglofus.gringotts.towny.TownyConfiguration.CONF;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,6 +12,14 @@ import org.gestern.gringotts.Permissions;
 import org.gestern.gringotts.accountholder.AccountHolder;
 import org.gestern.gringotts.api.dependency.Dependency;
 import org.gestern.gringotts.event.PlayerVaultCreationEvent;
+
+import com.oglofus.gringotts.towny.nation.NationAccountHolder;
+import com.oglofus.gringotts.towny.nation.NationHolderProvider;
+import com.oglofus.gringotts.towny.town.TownAccountHolder;
+import com.oglofus.gringotts.towny.town.TownHolderProvider;
+import com.palmergames.bukkit.towny.Towny;
+import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.TownyUniverse;
 
 /**
  * The type Towny dependency.
@@ -128,6 +132,11 @@ public class TownyDependency implements Dependency, Listener {
             if (owner == null) {
                 player.sendMessage(TownyLanguage.LANG.noTownResident);
 
+                return;
+            }
+
+            if (CONF.vaultsOnlyInTowns && TownyAPI.getInstance().getTownBlock(event.getCause().getBlock().getLocation()) == null) {
+                event.getCause().getPlayer().sendMessage(TownyLanguage.LANG.plugin_towny_vaultNotInTown);
                 return;
             }
 
