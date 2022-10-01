@@ -165,6 +165,11 @@ public class TownyDependency implements Dependency, Listener {
                 return;
             }
 
+            if (CONF.vaultsOnlyInTowns && TownyAPI.getInstance().getTownBlock(event.getCause().getBlock().getLocation()) == null) {
+                event.getCause().getPlayer().sendMessage(TownyLanguage.LANG.plugin_towny_vaultNotInTown);
+                return;
+            }
+
             event.setOwner(owner);
             event.setValid(true);
         }
