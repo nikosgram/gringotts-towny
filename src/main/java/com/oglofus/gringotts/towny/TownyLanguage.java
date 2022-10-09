@@ -12,6 +12,8 @@ public enum TownyLanguage {
     public String noTownResident;
     public String noNationVaultPerm;
     public String notInNation;
+    public String vaultNotInTown;
+    public String tooManyVaults;
 
     public void readLanguage(FileConfiguration savedLanguage) {
         BiFunction<String, String, String> translator =
@@ -26,6 +28,10 @@ public enum TownyLanguage {
                 translator.apply("NoNationVaultPerm", "You do not have permission to create nation vaults here.");
         LANG.notInNation       =
                 translator.apply("notInNation", "Cannot create nation vault: You do not belong to a nation.");
+        LANG.vaultNotInTown =
+                translator.apply("vaultNotInTown", "You cannot create vaults outside of towns.");
+        LANG.tooManyVaults =
+                translator.apply("tooManyVaults", "You cannot create more vaults! Max: %max");
 
     }
 }

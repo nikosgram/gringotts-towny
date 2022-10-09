@@ -5,3 +5,11 @@ language: custom
 # Example: [town vault]
 town_sign_vault_name: 'town'
 nation_sign_vault_name: 'nation'
+
+# Prevents players from creating a vault outside a town if set to true
+vaults_only_in_towns: false
+
+# Maximum number of vaults a town can own, set to -1 for infinite number of vaults
+max_town_vaults: -1
+# Maximum number of vaults a nation can own, set to -1 for infinite number of vaults
+max_nation_vaults: -1

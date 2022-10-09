@@ -1,26 +1,41 @@
 package com.oglofus.gringotts.towny;
 
+import static com.oglofus.gringotts.towny.TownyConfiguration.CONF;
+
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Tag;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.plugin.Plugin;
+import org.gestern.gringotts.AccountChest;
+import org.gestern.gringotts.Gringotts;
+import org.gestern.gringotts.Permissions;
+import org.gestern.gringotts.Util;
+import org.gestern.gringotts.accountholder.AccountHolder;
+import org.gestern.gringotts.api.dependency.Dependency;
+import org.gestern.gringotts.event.PlayerVaultCreationEvent;
+
 import com.oglofus.gringotts.towny.nation.NationAccountHolder;
 import com.oglofus.gringotts.towny.nation.NationHolderProvider;
 import com.oglofus.gringotts.towny.town.TownAccountHolder;
 import com.oglofus.gringotts.towny.town.TownHolderProvider;
 import com.palmergames.bukkit.towny.Towny;
+import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownyUniverse;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
-import org.gestern.gringotts.Gringotts;
-import org.gestern.gringotts.Permissions;
-import org.gestern.gringotts.accountholder.AccountHolder;
-import org.gestern.gringotts.api.dependency.Dependency;
-import org.gestern.gringotts.event.PlayerVaultCreationEvent;
+import com.palmergames.bukkit.towny.object.Nation;
+import com.palmergames.bukkit.towny.object.Town;
+import com.palmergames.bukkit.towny.object.metadata.IntegerDataField;
 
 /**
  * The type Towny dependency.
  */
 public class TownyDependency implements Dependency, Listener {
+    private IntegerDataField defaultVaultCountField = new IntegerDataField("vault_count", 1);
     private final NationHolderProvider nationHolderProvider;
     private final TownHolderProvider   townHolderProvider;
     private final Gringotts            gringotts;
@@ -131,6 +146,38 @@ public class TownyDependency implements Dependency, Listener {
                 return;
             }
 
+            if (CONF.vaultsOnlyInTowns && TownyAPI.getInstance().getTownBlock(event.getCause().getBlock().getLocation()) == null) {
+                event.getCause().getPlayer().sendMessage(TownyLanguage.LANG.vaultNotInTown);
+                return;
+            }
+
+            Town town = ((TownAccountHolder) owner).getTown();
+            if (!town.hasMeta(defaultVaultCountField.getKey())) {
+                town.addMetaData(defaultVaultCountField);
+                event.setOwner(owner);
+                event.setValid(true);
+                return;
+            }
+
+            IntegerDataField townVaultCount = (IntegerDataField) town.getMetadata("vault_count");
+            if (CONF.maxTownVaults == -1) { // Keep track of vaults created & return because there is no limit for them
+                townVaultCount.setValue(townVaultCount.getValue() + 1);
+                town.addMetaData(townVaultCount); // Saves to disk
+                event.setOwner(owner);
+                event.setValid(true);
+                return;
+            }
+
+            if (townVaultCount.getValue() + 1 > CONF.maxTownVaults) {
+                event.getCause().getPlayer().sendMessage(TownyLanguage.LANG.tooManyVaults
+                        .replace("%max", String.valueOf(CONF.maxTownVaults))
+                        .replace("%government", String.valueOf(owner.getType())));
+                return;
+            }
+
+            townVaultCount.setValue(townVaultCount.getValue() + 1); // Saves to memory
+            town.addMetaData(townVaultCount); // Saves to disk
+
             event.setOwner(owner);
             event.setValid(true);
         } else if (event.getType().equals(TownyConfiguration.CONF.nationSignTypeName)) {
@@ -156,8 +203,81 @@ public class TownyDependency implements Dependency, Listener {
                 return;
             }
 
+            if (CONF.vaultsOnlyInTowns && TownyAPI.getInstance().getTownBlock(event.getCause().getBlock().getLocation()) == null) {
+                event.getCause().getPlayer().sendMessage(TownyLanguage.LANG.vaultNotInTown);
+                return;
+            }
+
+            Nation nation = ((NationAccountHolder) owner).getNation();
+            if (!nation.hasMeta(defaultVaultCountField.getKey())) {
+                nation.addMetaData(defaultVaultCountField);
+                event.setOwner(owner);
+                event.setValid(true);
+                return;
+            }
+
+            IntegerDataField nationVaultCount = (IntegerDataField) nation.getMetadata("vault_count");
+            if (CONF.maxNationVaults == -1) { // Keep track of vaults created & return because there is no limit for them
+                nationVaultCount.setValue(nationVaultCount.getValue() + 1);
+                nation.addMetaData(nationVaultCount); // Saves to disk
+                event.setOwner(owner);
+                event.setValid(true);
+                return;
+            }
+
+            if (nationVaultCount.getValue() + 1 > CONF.maxNationVaults) {
+                event.getCause().getPlayer().sendMessage(TownyLanguage.LANG.tooManyVaults
+                        .replace("%max", String.valueOf(CONF.maxNationVaults))
+                        .replace("%government", String.valueOf(owner.getType())));
+                return;
+            }
+
+            nationVaultCount.setValue(nationVaultCount.getValue() + 1); // Saves to memory
+            nation.addMetaData(nationVaultCount); // Saves to disk
+
             event.setOwner(owner);
             event.setValid(true);
+        }
+    }
+
+    @EventHandler
+    public void vaultDeleted(BlockBreakEvent event) {
+        if (!Util.isValidContainer(event.getBlock().getType()) && !Tag.SIGNS.isTagged(event.getBlock().getType())) return;
+
+        Location blockLoc = event.getBlock().getLocation();
+        List<AccountChest> chests = gringotts.getDao().retrieveChests();
+
+        // The block itself is actually a sign
+        for (AccountChest chest : chests) {
+            if (chest.sign.getBlock().getLocation().equals(blockLoc) || chest.chestLocation().equals(blockLoc)) {
+
+                AccountHolder owner = chest.getAccount().owner;
+
+                switch (owner.getType()) {
+                    case "town":
+                        Town town = ((TownAccountHolder) owner).getTown();
+
+                        IntegerDataField townVaultCount = (IntegerDataField) town.getMetadata("vault_count");
+                        if (townVaultCount == null) break;
+                        townVaultCount.setValue(townVaultCount.getValue() - 1); // Saves to memory
+                        town.addMetaData(townVaultCount); // Saves to disk
+
+                        break;
+
+                    case "nation":
+                        Nation nation = ((NationAccountHolder) owner).getNation();
+
+                        IntegerDataField nationVaultCount = (IntegerDataField) nation.getMetadata("vault_count");
+                        if (nationVaultCount == null) break;
+                        nationVaultCount.setValue(nationVaultCount.getValue() - 1); // Saves to memory
+                        nation.addMetaData(nationVaultCount); // Saves to disk
+
+                        break;
+
+                    default:
+                        break;
+                }
+            }
         }
     }
 }

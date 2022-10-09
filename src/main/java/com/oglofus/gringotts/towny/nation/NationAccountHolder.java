@@ -60,4 +60,12 @@ public class NationAccountHolder implements AccountHolder {
     public String getId() {
         return this.nation.getUUID().toString();
     }
+
+    /**
+     * The nation onwing this account
+     * @return nation object
+     */
+    public Nation getNation() {
+        return nation;
+    }
 }

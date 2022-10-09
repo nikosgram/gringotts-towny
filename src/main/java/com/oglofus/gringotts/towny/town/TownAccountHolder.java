@@ -60,4 +60,12 @@ public class TownAccountHolder implements AccountHolder {
     public String getId() {
         return this.town.getUUID().toString();
     }
+
+    /**
+     * The town onwing this account
+     * @return town object
+     */
+    public Town getTown() {
+        return this.town;
+    }
 }
