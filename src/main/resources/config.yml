@@ -1,4 +1,4 @@
-# supported languages: "custom" (default, english), "de" (german), and "pt-BR" (brazilian portuguese).
+# supported languages: "custom" (default, english), "de" (german), "fr" (french), and "pt-BR" (brazilian portuguese).
 language: custom
 
 # changes the required sign name for the creation of town/nation vaults
