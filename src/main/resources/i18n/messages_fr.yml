@@ -1,0 +1,6 @@
+noTownVaultPerm: "Vous n'avez pas la permission de créer un coffre-fort de ville ici."
+noTownResident: "Impossible de créer un coffre-fort de ville : Vous n'êtes pas résident d'une ville."
+noNationVaultPerm: "Vous n'avez pas la permission de créer un coffre-fort de nation ici."
+notInNation: "Impossible de créer un coffre-fort de nation : Vous n'appartenez pas à une nation."
+vaultNotInTown: "Vous ne pouvez pas créer de coffre-fort en dehors des villes."
+tooManyVaults: "Vous ne pouvez pas créer plus de coffre-fort ! Max : %max"
