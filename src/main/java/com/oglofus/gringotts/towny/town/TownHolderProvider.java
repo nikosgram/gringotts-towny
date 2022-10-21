@@ -1,5 +1,6 @@
 package com.oglofus.gringotts.towny.town;
 
+import com.oglofus.gringotts.towny.TownyConfiguration;
 import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.event.RenameTownEvent;
 import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
@@ -10,10 +11,12 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.gestern.gringotts.AccountChest;
+import org.gestern.gringotts.Configuration;
 import org.gestern.gringotts.Gringotts;
 import org.gestern.gringotts.GringottsAccount;
 import org.gestern.gringotts.accountholder.AccountHolder;
 import org.gestern.gringotts.accountholder.AccountHolderProvider;
+import org.gestern.gringotts.event.CalculateStartBalanceEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -147,5 +150,19 @@ public class TownHolderProvider implements AccountHolderProvider, Listener {
         }
 
         Gringotts.instance.getDao().retrieveChests(account).forEach(AccountChest::updateSign);
+    }
+
+    /**
+     * Calculate start balance.
+     *
+     * @param event the event
+     */
+    @EventHandler
+    public void calculateStartBalance(CalculateStartBalanceEvent event) {
+        if (!event.holder.getType().equals(getType())) {
+            return;
+        }
+
+        event.startValue = Configuration.CONF.getCurrency().getCentValue(TownyConfiguration.CONF.townStartBalance);
     }
 }

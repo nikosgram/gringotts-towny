@@ -13,3 +13,7 @@ vaults_only_in_towns: false
 max_town_vaults: -1
 # Maximum number of vaults a nation can own, set to -1 for infinite number of vaults
 max_nation_vaults: -1
+
+# balance to start an account with (purely virtual)
+town_start_balance: 0
+nation_start_balance: 0
