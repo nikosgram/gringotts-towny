@@ -12,7 +12,3 @@ awareness:
 depend:
   - Gringotts
   - Towny
-
-loadbefore:
-  - Gringotts
-  - Towny
