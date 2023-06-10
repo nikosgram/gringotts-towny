@@ -2,6 +2,7 @@ package com.oglofus.gringotts.towny;
 
 import static com.oglofus.gringotts.towny.TownyConfiguration.CONF;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -245,7 +246,7 @@ public class TownyDependency implements Dependency, Listener {
         if (!Util.isValidContainer(event.getBlock().getType()) && !Tag.SIGNS.isTagged(event.getBlock().getType())) return;
 
         Location blockLoc = event.getBlock().getLocation();
-        List<AccountChest> chests = gringotts.getDao().retrieveChests();
+        List<AccountChest> chests = new ArrayList<>(gringotts.getDao().retrieveChests());
 
         // The block itself is actually a sign
         for (AccountChest chest : chests) {
