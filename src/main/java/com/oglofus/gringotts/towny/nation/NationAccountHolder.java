@@ -61,6 +61,11 @@ public class NationAccountHolder implements AccountHolder {
         return this.nation.getUUID().toString();
     }
 
+    @Override
+    public boolean hasPermission(String permission) {
+        return false;
+    }
+
     /**
      * The nation onwing this account
      * @return nation object

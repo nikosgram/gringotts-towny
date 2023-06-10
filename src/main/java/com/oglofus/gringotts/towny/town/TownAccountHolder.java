@@ -61,6 +61,11 @@ public class TownAccountHolder implements AccountHolder {
         return this.town.getUUID().toString();
     }
 
+    @Override
+    public boolean hasPermission(String permission) {
+        return false;
+    }
+
     /**
      * The town onwing this account
      * @return town object
