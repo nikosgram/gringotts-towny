@@ -1,7 +1,12 @@
-# gringotts-towny
+# GringottsTowny
 
 Gringotts-Towny allows the creation of [Gringotts](https://github.com/nikosgram/gringotts) vaults and account
 for [Towny](https://www.spigotmc.org/resources/towny-advanced.72694/)'s nations and towns.
+
+### Get GringottsTowny
+
+- [from Spigot](https://www.spigotmc.org/resources/gringotts-towny.105074/)
+- [from Hangar](https://hangar.papermc.io/nikosgram/Gringotts-Towny)
 
 ## Configuration
 
