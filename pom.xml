@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.oglofus</groupId>
     <artifactId>gringotts-towny</artifactId>
-    <version>2.12.5-SNAPSHOT</version>
+    <version>2.12.5</version>
 
     <properties>
         <maven.deploy.skip>false</maven.deploy.skip>
@@ -86,9 +86,12 @@
                         </phase>
                         <configuration>
                             <target>
-                                <copy file="target\${project.artifactId}-${project.version}.jar" tofile="out\1.19.2\plugins\${project.artifactId}.jar"/>
-                                <copy file="target\${project.artifactId}-${project.version}.jar" tofile="out\1.18.2\plugins\${project.artifactId}.jar"/>
-                                <copy file="target\${project.artifactId}-${project.version}.jar" tofile="out\1.20.1\plugins\${project.artifactId}.jar"/>
+                                <copy file="target\${project.artifactId}-${project.version}.jar" tofile="out\paper\1.19.2\plugins\${project.artifactId}.jar"/>
+                                <copy file="target\${project.artifactId}-${project.version}.jar" tofile="out\paper\1.18.2\plugins\${project.artifactId}.jar"/>
+                                <copy file="target\${project.artifactId}-${project.version}.jar" tofile="out\paper\1.20.1\plugins\${project.artifactId}.jar"/>
+                                <copy file="target\${project.artifactId}-${project.version}.jar" tofile="out\spigot\1.19.2\plugins\${project.artifactId}.jar"/>
+                                <copy file="target\${project.artifactId}-${project.version}.jar" tofile="out\spigot\1.18.2\plugins\${project.artifactId}.jar"/>
+                                <copy file="target\${project.artifactId}-${project.version}.jar" tofile="out\spigot\1.20.1\plugins\${project.artifactId}.jar"/>
                             </target>
                         </configuration>
                         <goals>
@@ -118,12 +121,6 @@
             <artifactId>gringotts</artifactId>
             <version>${version}</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>23.0.0</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 

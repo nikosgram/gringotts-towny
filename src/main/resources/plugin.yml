@@ -1,14 +1,9 @@
-name: gringotts-towny
-authors: [ nikosgram ]
+name: GringottsTowny
+authors: [ nikosgram, GroobleDierne ]
 website: https://github.com/nikosgram/gringotts-towny
-version: ${version}
+version: ${project.version}
 main: com.oglofus.gringotts.towny.GringottsTowny
 
 api-version: "1.18"
 
-awareness:
-  - !@UTF-8
-
-depend:
-  - Gringotts
-  - Towny
+depend: [ Gringotts, Towny ]
